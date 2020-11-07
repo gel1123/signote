@@ -9,7 +9,7 @@
 # test01ユーザについて、/etc/passwd内の記述を確認
 cat /etc/passwd | grep test01
 
-# /etc/passwdの内容は以下
+# /etc/passwdの内容は以下：
 # test01:x:1001:1001:test01@hogemail.com:/home/test01:/bin/bash
 ```
 
@@ -25,7 +25,27 @@ cat /etc/passwd | grep test01
 
 
 ### /etc/shadow
+ハッシュ化されたパスワードや、パスワードの有効期限などの情報が記されています。
 
+```bash
+# test01ユーザについて、/etc/shadow内の記述を確認
+sudo cat /etc/shadow | grep test01
+
+# /etc/shadowの内容は以下：
+test01:$6$kXBRGbQK$Mqs10ikLCAfyvHecyz3XSGoWhAADXh2SNBncfhh4dXvNwoemRZR6xhR9iAJYL5x8Njxgp.mfTddlEQyt7tjpv.:18573:0:99999:7:::
+```
+
+|列番号|意味|上記「test01」ユーザの値|
+|----|----|----|
+|ユーザ名|test01|
+|ハッシュ化されたパスワード|$6$kXBRGbQK$Mqs10ikLCAfyvHecyz3XSGoWhAADXh2SNBncfhh4dXvNwoemRZR6xhR9iAJYL5x8Njxgp.mfTddlEQyt7tjpv.|
+|1970年1月1日から最後にパスワードが変更された日までの日数|18573|
+|パスワードが変更可能になるまでの日数|0|
+|パスワード変更期日までの日数|99999|
+|パスワード変更期日が迫っているのを事前に知らせる日数|7|
+|パスワードの期限が切れたアカウントが使用不能となるまでの日数||
+|1970年1月1日からパスワードの有効期限までの日数||
+|未使用の予約フィールド||
 
 ## グループ関連
 
