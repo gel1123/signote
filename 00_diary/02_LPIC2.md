@@ -18,5 +18,7 @@ SysVinit勉強できる環境整えてから続きは勉強...
 * タブレットのubuntu-in-termuxがSysVinit環境だったのでこれを勉強に使える
 * と思ったら、Ubuntuには/etc/inittabないのか（代わりにUpstartを使ってるとのこと。/etc/inittabについて勉強したかった）
 * 調べた感じ、UpStartなしで完全なSysVinitのみの環境用意するならCentOS5がよさそう
-* GCPでCentOS5のマシン立ち上げるか...
-
+* GCPでCentOS5のマシン立ち上げるか...と思ったが、GCPのComputeEngineで選べるCentOSのVMはバージョン6以降しかなかった
+* Dockerで勉強するか（Docker特有の制限事項が勉強の邪魔になりそうで、避けていた選択肢）
+* 自宅のWindowsにDocker入れてるけど、Windowsの起動が遅いのが嫌だから、タブレットにDocker入れることにした
+* termuxではDocker無理っぽかったので自宅WindowsのDockerを使うか、ほかのなにかで環境つくろう
