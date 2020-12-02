@@ -32,3 +32,8 @@ SysVinit勉強できる環境整えてから続きは勉強...
 * 自宅のWindowsにDocker入れてるけど、Windowsの起動が遅いのが嫌だから、タブレットにDocker入れることにした
 * termuxではDocker無理っぽかったので自宅WindowsのDockerを使うか、ほかのなにかで環境つくろう
 * Docker(podman)で/sbin/initで動かせるcentos5（or "docker run --init"が使えるcentos5）を用意しようとしたけど道のりが長そうで面倒くさくなりました、ほかのなにかで環境をつくることにする
+* 結局LPIC304の勉強がてらkvmでcentos5.5の環境を用意することにしました
+
+### 2020-12-02
+* kvmでcentos5.5の環境作るのに難航（OSのブートがうまくいかない）
+* なのでxenでの環境構築を試みようとしたが、一旦別の資格の勉強を急遽しないといけなくなったため中断
