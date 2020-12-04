@@ -24,6 +24,12 @@ HTMLプロフェッショナル試験を受けることにしたので、その�
 ## transformプロパティ（CSS）
 * どんな値を設定できるのか覚えること
 
+## paddingの複数値同時設定
+* padding 10px : 上下左右に10pxのpaddingを設定
+* padding 10px 5px : 上下10px, 左右5px
+* padding 10px 5px 3px : 上10px, 左右5px, 下3px
+* padding 1px 2px 3px 4px : 上1px, 右2px, 下3px, 左4px 
+
 ## グラデーション生成関数
 CSS3で追加されたCSS関数のひとつです。
 ### 線形グラデーション：liner-gradient
