@@ -40,6 +40,20 @@ CSSのfloatプロパティを使った要素は、HTMLのレイアウト上「�
 
 要素の回り込みを解除するにはCSSのclear属性を使う。float:rightを解除するなら、clear:rightを指定する必要がある。
 
+## CSSの「疑似要素」
+|疑似要素|意味|
+|----|----|
+|::before|要素の内容の直前|
+|::after|要素の内容の直後|
+|::first-line|要素内容の最初の1行|
+|::first-letter|要素内容の最初の1文字|
+
+### ::beforeと::after
+たとえば「p::before { content: "hoge" }」と指定すれば、p要素の内容の最初に「hoge」が挿入される。afterなら最後に挿入。
+
+上記「contentプロパティ」は疑似要素「::before」「::after」にしか使えないプロパティ。テキストのほかに、画像の挿入も可能。
+
+
 ## 改行に関するCSS
 * white-space : <br>自動的に改行するかしないかを指定できる（そのほかにも空白文字の表示方法をこのCSSで指定できる）
 * word-break : <br>どんな風に改行するかを指定できる（単語区切りや表示幅通りなど）
@@ -126,6 +140,13 @@ Webアプリのスクリプトをバッググラウンドで実行するため�
 |属性      |意味                                       |
 |----------|-------------------------------------------|
 |dirname   |directoryではなくdirection（方向）の意味。<br>テキストの方向データを送信するフィールド名|
+|formnovalidate|フォームの検証を行わない<br>対象となるのはrequired, minlength, min, type, patternなど|
+|formaction|formタグのactionと同様の役割|
+|formenctype|エンコードの種類|
+|formmethod|GET or POST|
+|formtarget|aタグのtarget属性と同じ|
+
+上記「formxxx」系の属性はbuttonタグでも使える。
 
 ## マイナーなHTMLタグ（要素）
 ### output要素
@@ -181,13 +202,15 @@ linkタグやstyleタグにつけることができる。メディアの種類�
 * footer要素は複数配置できるとのこと。意外（header要素も同様とのこと）。
 * RDF is 何（メタ文書ということしか理解していない。RDFaはRDFの仕様？）
 * Youtubeの字幕機能のように、video要素やaudio要素で字幕やチャプター、キャプションなどを表示するには「track要素」を使うa
-* animationとtransitionの違い is 何
+* animationとtransitionの違い is 何<br>▲transitionは遷移の効果を指定する（たとえばtransition-property:background-colorと指定すれば、その要素のbackground-colorが変更されるときの変化の仕方にtransitionが働く）
 * アプリケーションキャッシュがキャッシュを更新するのは、サーバでファイルの内容が書き換わったときではなく、『キャッシュマニフェストが更新』されているとき
 * nth-child(2n+1)は「1つ目」「3つ目」「5つ目」という順で要素にスタイルを適用する（n が 0 からスタートする）
 * canvas要素にはimgのように画像ファイルを表示させることもできる（canvasはビットマップで描画を行う要素）
 * imgタグのsrc属性や、CSSのbackground-imageプロパティには、「data:image/gif;base64,xxxxxxxxxxxxxx」（data URIスキーム）で画像などのデータを直接埋め込むことができる
 * URLやURIの「UR」とは「Uniform Resource（統一資源）」を示す。
 * CSSのword-spacingは文字通り「単語間の」スペースを指定する（「文字間」ではない）
+* HTMLのfigcaptionとcaptionは、いずれも対象の要素内にひとつしかかけないが、figcaptionがfigure要素内のどこにでも書ける（HTML5.1以降）一方で、captionはtable要素の最初の子要素でなければならない
+* HTML要素の属性値は ---- 必ずしも引用符で囲まなくてもいいらしい ----。（属性値にスペースや特殊な記号を含まなければ、引用符を省略できるとのこと）
 
 
 ## マイナーなCSSセレクタ
