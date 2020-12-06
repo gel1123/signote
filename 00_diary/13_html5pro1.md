@@ -85,8 +85,9 @@ linkタグのrel属性に「apple-touch-icon」「apple-touch-icon-precomposed�
 |要素名|意味（英語）|意味（日本語）|
 |------|----------------|------------|
 |ruby  |ruby            |ルビ要素    |
-|rb    |ruby            |ルビを振る対象の文字列
+|rb    |ruby-base       |ルビを振る対象の文字列
 |rt    |ruby-text       |ルビそのもの。rb要素で指定したテキストのルビとして表示される|
+|rbc|  |ruby-base-container|rb要素の複数版？ HTML5では採用されなかったっぽい気配がある
 |rtc   |ruby-text-container|ルビを複数つけるときに使う要素。<br>これを使えばひらがなのルビと、英語のルビを同時に振ることなどが可能|
 |rp    |ruby<br>-parentheses|ルビ要素未対応ブラウザで、<br>ルビの代わりとなるテキストを括弧内に表示する|
 
