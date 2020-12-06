@@ -33,6 +33,13 @@ metaタグに「http-equiv="Content-Type"」「content="text/html"」「charset=
 
 ※http-equivはmeta要素をプラグマ指示子にする属性。「プラグマ」とは「ユーザエージェントへの指示」を意味する言葉で、文書の扱いを指定できる。
 
+## HTML要素の列挙属性と論理属性について
+### 列挙属性
+設定値が、いくつか存在する規定の値を指定するタイプの属性。spellchackやdraggableなど「属性名="true"」「属性名="false"」と書く属性のこと。
+
+### 論理属性
+hiddenなど属性名があれば「真」、なければ「偽」となる要素。
+
 ## floatについて
 CSSのfloatプロパティを使った要素は、HTMLのレイアウト上「浮いている」かのように扱える。
 
