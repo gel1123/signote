@@ -85,7 +85,9 @@ linkタグのrel属性に「apple-touch-icon」「apple-touch-icon-precomposed�
 |要素名|意味（英語）|意味（日本語）|
 |------|----------------|------------|
 |ruby  |ruby            |ルビ要素    |
-|rt    |ruby-text       |ルビそのもの|
+|rb    |ruby            |ルビを振る対象の文字列
+|rt    |ruby-text       |ルビそのもの。rb要素で指定したテキストのルビとして表示される|
+|rtc   |ruby-text-container|ルビを複数つけるときに使う要素。<br>これを使えばひらがなのルビと、英語のルビを同時に振ることなどが可能|
 |rp    |ruby<br>-parentheses|ルビ要素未対応ブラウザで、<br>ルビの代わりとなるテキストを括弧内に表示する|
 
 ## transformプロパティ（CSS）
@@ -227,6 +229,8 @@ linkタグやstyleタグにつけることができる。メディアの種類�
 * CSSのword-spacingは文字通り「単語間の」スペースを指定する（「文字間」ではない）
 * HTMLのfigcaptionとcaptionは、いずれも対象の要素内にひとつしかかけないが、figcaptionがfigure要素内のどこにでも書ける（HTML5.1以降）一方で、captionはtable要素の最初の子要素でなければならない
 * HTML要素の属性値は ---- 必ずしも引用符で囲まなくてもいいらしい ----。（属性値にスペースや特殊な記号を含まなければ、引用符を省略できるとのこと）
+* ユーザによるピンチイン・ピンチアウト（スマホで2本指を使って画面の拡大・縮小を行う操作）を許可したいなら、name="viewport"のmetaタグのcontent属性に「user-scalable=yes」もしくは「user-scalable=1」を記述すること
+
 
 ## CSSセレクタの結合子
 【CSSセレクタ1】【結合子】【CSSセレクタ2】の記法で特定の条件を指定できる。
