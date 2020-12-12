@@ -41,7 +41,7 @@ window.onload = () => {
 </script>
 </head>
 <body>
-<div id="code">
+<form id="code">
 	<h2>▼ JavaScriptのコードを試し書きできます</h2>
 	<textarea oninput="test(this)">
 (() => {
@@ -51,7 +51,7 @@ window.onload = () => {
   return reg.test(hoge);
 
 })()</textarea>
-</div>
+</form>
 <div id="result">
 	<h2>コードの実行結果</h2>
 	<p></p>
@@ -63,6 +63,21 @@ window.onload = () => {
 		<li>codeプロパティ: <span></span></li>
 		<li>keyプロパティ: <span></span></li>
 	</ul>
+</div>
+
+<div id="test-form">
+	<h2>test用フォーム</h2>
+	<form id="hoge" name="h">
+		<input name="i">
+	</form>
+
+	<form id="fuge" name="f">
+		<input name="i">
+	</form>
+
+	<form id="sage" name="s">
+		<input name="i">
+	</form>
 </div>
 </body>
 </html>
