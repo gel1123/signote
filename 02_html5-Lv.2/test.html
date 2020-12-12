@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+textarea {
+	height:150px;
+	width:100%;
+}
+</style>
+<script>
+'use strict';
+
+document.addEventListener('keydown', (e)=> {
+	const ke = document.querySelector('#keyboard-eve');
+	const event_name = e.__proto__.toString().match(/[a-z-A-Z]+/g)[1];
+	ke.querySelector('li>span').textContent = event_name;
+	ke.querySelector('li+li>span').textContent = e.code;
+	ke.querySelector('li+li+li>span').textContent = e.key;
+})
+
+const test = (self) => {
+	try {
+		const result = Function(
+			'"use strict"; return (' 
+			+ self.value
+			+ ')'
+		)();
+		console.log(result);
+		document.querySelector('#result>p').textContent = result;
+	} catch(e) {	
+		document.querySelector('#result>p').textContent = "";
+	}
+}
+window.onload = () => {
+	document.querySelector('#code>textarea').dispatchEvent(
+		new Event('input')
+	)
+}
+</script>
+</head>
+<body>
+<div id="code">
+	<h2>▼ JavaScriptのコードを試し書きできます</h2>
+	<textarea oninput="test(this)">
+(() => {
+
+  const hoge = "hogehoge";
+  const reg = /ge/;
+  return reg.test(hoge);
+
+})()</textarea>
+</div>
+<div id="result">
+	<h2>コードの実行結果</h2>
+	<p></p>
+</div>
+<div id="keyboard-eve">
+	<h2>発生したキーボードイベント</h2>
+	<ul>
+		<li>イベントのプロトタイプ名: <span></span> </li>
+		<li>codeプロパティ: <span></span></li>
+		<li>keyプロパティ: <span></span></li>
+	</ul>
+</div>
+</body>
+</html>
+
