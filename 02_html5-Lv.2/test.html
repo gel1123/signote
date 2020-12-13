@@ -54,9 +54,9 @@ window.onload = () => {
 	<textarea oninput="test(this)">
 (() => {
 
-  const hoge = "hogehoge";
-  const reg = /ge/;
-  return reg.test(hoge);
+  var stateObj = { key1: "val1" };
+  history.pushState(stateObj, "title", "dummy");
+  return JSON.stringify(history.state)
 
 })()</textarea>
 	<pre><code class="javascript" id="yourcode">
