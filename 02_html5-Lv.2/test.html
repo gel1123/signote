@@ -55,7 +55,7 @@ window.onload = () => {
 (() => {
 
   var stateObj = { key1: "val1" };
-  history.pushState(stateObj, "title", "dummy");
+  history.replaceState(stateObj, "title", "dummy");
   return JSON.stringify(history.state)
 
 })()</textarea>

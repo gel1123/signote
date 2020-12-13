@@ -6,6 +6,7 @@ var server = http.createServer();
 server.on('request', doRequest);
 var fs = require('fs');
 function doRequest(req, res) {
+    console.log(new Date() + " : " + req.url);
     fs.readFile('./test.html', 'utf-8' , doRead );
     function doRead(err, data) {
         res.writeHead(200, {'Content-Type': 'text/html'});
