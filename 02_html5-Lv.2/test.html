@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
 <style>
 textarea {
 	height:150px;
@@ -29,6 +35,8 @@ const test = (self) => {
 		)();
 		console.log(result);
 		document.querySelector('#result>p').textContent = result;
+		document.querySelector('#yourcode').textContent = self.value;
+		hljs.highlightBlock(document.querySelector('#yourcode'));
 	} catch(e) {	
 		document.querySelector('#result>p').textContent = "";
 	}
@@ -51,6 +59,8 @@ window.onload = () => {
   return reg.test(hoge);
 
 })()</textarea>
+	<pre><code class="javascript" id="yourcode">
+	</code></pre>
 </form>
 <div id="result">
 	<h2>コードの実行結果</h2>
