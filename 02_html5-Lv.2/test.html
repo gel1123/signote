@@ -17,11 +17,15 @@
 
 <style>
 textarea {
-	height:150px;
-	width:100%;
+	height: 150px;
+	width: 100%;
 }
 .err {
 	color: red;
+}
+#studying-canvas>textarea {
+	height: 200px;
+	width: 100%
 }
 </style>
 <script>
@@ -81,6 +85,7 @@ window.onload = () => {
 		document.querySelector('#code>textarea'),
 		document.forms.html_beautify_form.html_beautify_input,
 		document.forms.css_beautify_form.css_beautify_input,
+		document.querySelector('#studying-canvas>textarea')
 	].forEach((elm) => elm.dispatchEvent(new Event('input')));
 }
 </script>
@@ -133,6 +138,24 @@ window.onload = () => {
 		">.hoge { background: red; margin: 0 auto; text-align: center; }</textarea>
 		<pre><code class="css"></code></pre>
 	</form>
+</div>
+<div id="studying-canvas">
+	<h2>canvas試し書き</h2>
+	<textarea oninput="Function(this.value)();">
+const canvas = document.querySelector("#canvas1");
+const context = canvas.getContext("2d");
+context.clearRect(0, 0, canvas.width, canvas.height);
+context.font = "40px sans-serif";
+context.setTransform(
+	1, 	// 1. x軸の拡大率
+	0.5, 	// 2. x軸の傾斜率
+	0, 	// 3. y軸の拡大率
+	1, 	// 4. y軸の傾斜率
+	0, 	// 5. x軸の移動距離
+	0	// 6. y軸の移動距離
+);
+context.fillText("TEST", 50, 50);</textarea>
+	<canvas id="canvas1"></canvas>
 </div>
 </body>
 </html>
