@@ -23,9 +23,15 @@ textarea {
 .err {
 	color: red;
 }
-#studying-canvas>textarea {
+#code-canvas1 {
 	height: 200px;
 	width: 100%
+}
+video, audio {
+	width: 400px;
+}
+#video-list>li {
+	background-color: rgb(240, 240, 240);
 }
 </style>
 <script>
@@ -85,19 +91,45 @@ window.onload = () => {
 		document.querySelector('#code>textarea'),
 		document.forms.html_beautify_form.html_beautify_input,
 		document.forms.css_beautify_form.css_beautify_input,
-		document.querySelector('#studying-canvas>textarea')
+		document.querySelector('#code-canvas1')
 	].forEach((elm) => elm.dispatchEvent(new Event('input')));
+}
+
+const timeout_status = {};
+const mark = (target_id) => {
+	console.count(target_id);
+	if (timeout_status[target_id]) {
+		clearTimeout(timeout_status[target_id]);
+	}
+	const target = document.querySelector(target_id);
+	target.style.color = "red";
+	target.style.backgroundColor = "yellow";
+	timeout_status[target_id] = window.setTimeout(() => {
+		target.style.color = "";
+		target.style.backgroundColor = "white";
+	}, 3000);
+};
+const mark1 = (target_id) => {
+	const target = document.querySelector(target_id);
+	const disptime = target.querySelector(".disptime");
+	var now = new Date();
+	var now_str = ("0"+now.getHours()).slice(-2) + "時" + ("0"+now.getMinutes()).slice(-2) + "分" + ("0"+now.getSeconds()).slice(-2) + "." + ("00"+now.getMilliseconds()).slice(-3) + "秒";
+	disptime.textContent = `${now_str} >> `;
+	const parent = document.querySelector("#video-list");
+	const first = document.querySelector("#video-list>li");
+	parent.insertBefore(target, first);
+	mark(target_id);
 }
 </script>
 </head>
 <body>
 <form id="code">
 	<h2>▼ JavaScriptのコードを試し書きできます ※strictモード</h2>
-	<textarea oninput="test(this)">
+	<textarea oninput="test(this)" spellcheck="false">
 (() => {
 
   var stateObj = { key1: "val1" };
-  history.replaceState(stateObj, "title", "dummy");
+  // history.replaceState(stateObj, "title", "dummy");
   return JSON.stringify(history.state)
 
 })()</textarea>
@@ -117,6 +149,7 @@ window.onload = () => {
 	</ul>
 </div>
 
+<hr>
 <div id="beautify">
 	<h2>HTML, CSS整形</h2>
 	<form id="html_beautify" name="html_beautify_form">
@@ -125,7 +158,8 @@ window.onload = () => {
 			const target = document.forms.html_beautify_form.querySelector('code');
 			target.textContent = html_beautify(this.value, beautify_opt2);
 			hljs.highlightBlock(target)
-		"><div><ul><li class="hoge">hoge</li></ul></div></textarea>
+		" spellcheck="false"
+		><div><ul><li class="hoge">hoge</li></ul></div></textarea>
 		<pre><code class="html"></code></pre>
 	</form>
 
@@ -135,27 +169,92 @@ window.onload = () => {
 			const target = document.forms.css_beautify_form.querySelector('code');
 			target.textContent = css_beautify(this.value, beautify_opt2);
 			hljs.highlightBlock(target)
-		">.hoge { background: red; margin: 0 auto; text-align: center; }</textarea>
+		" spellcheck="false"
+		>.hoge { background: red; margin: 0 auto; text-align: center; }</textarea>
 		<pre><code class="css"></code></pre>
 	</form>
 </div>
+<hr>
 <div id="studying-canvas">
-	<h2>canvas試し書き</h2>
-	<textarea oninput="Function(this.value)();">
+	<h2>canvas試し書き(以下コード編集可能です)</h2>
+	<pre><code contenteditable="true"
+			oninput="Function(this.textContent)();"
+			id="code-canvas1"
+			spellcheck="false">
 const canvas = document.querySelector("#canvas1");
 const context = canvas.getContext("2d");
 context.clearRect(0, 0, canvas.width, canvas.height);
 context.font = "40px sans-serif";
 context.setTransform(
-	1, 	// 1. x軸の拡大率
-	0.5, 	// 2. x軸の傾斜率
-	0, 	// 3. y軸の拡大率
-	1, 	// 4. y軸の傾斜率
-	0, 	// 5. x軸の移動距離
-	0	// 6. y軸の移動距離
+	1,	 	// 1. x軸のスケーリング（拡大率）
+	0.5, 	// 2. x軸のスキュー（傾斜率）
+	0,	 	// 3. y軸のスキュー（傾斜率）
+	1,	 	// 4. y軸のスケーリング（拡大率）
+	0,	 	// 5. x軸の移動
+	0		// 6. y軸の移動
 );
-context.fillText("TEST", 50, 50);</textarea>
+context.fillText("TEST", 50, 50);</code></pre>
 	<canvas id="canvas1"></canvas>
+</div>
+<hr>
+<div id="studying-dataurl">
+	<h2>dataurl + メディアAPIの利用テスト</h2>
+	<pre><code id="code-dataurl">
+const file = document.querySelector("#studying-dataurl>input[type=file]").files[0];
+const reader = new FileReader();
+reader.addEventListener("load", () => {
+	document.querySelector("#result-dataurl").textContent = `${reader.result.substr(0, 100)}...`;
+	document.querySelector("#studying-dataurl video").src = reader.result;
+	document.querySelector("#studying-dataurl audio").src = reader.result;
+	document.querySelector("#studying-dataurl img").src = reader.result;
+}, false);
+file && reader.readAsDataURL(file);
+	</code></pre>
+	<input type="file" onchange="
+		Function(document
+				.querySelector('#code-dataurl')
+				.textContent)()">
+	<pre><code id="result-dataurl"></code></pre>
+	<p>
+		<h3>video要素（dataurlが動画ならここで再生できます）</h3>
+		<video controls
+			   onplay="mark1('#video-onplay')"
+			   onplaying="mark1('#video-onplaying')"
+			   ontimeupdate="mark1('#video-ontimeupdate')"
+			   onpause="mark1('#video-onpause')"
+			   onwaiting="mark1('#video-onwaiting')"
+			   onstalled="mark1('#video-onstalled')"
+			   onended="mark1('#video-onended')"
+			   onerror="mark1('#video-onerror')"
+			   onabort="mark1('#video-onabort')"
+			   onloadstart="mark1('#video-onloadstart')"
+			   onprogress="mark1('#video-onprogress')"
+			   onloadeddata="mark1('#video-onloadeddata')"
+				></video>
+		<h4>video要素のイベントハンドラ</h4>
+		<ol id="video-list">
+			<li id="video-onplay"><span class="disptime"></span>onplay<span class="des">：再生実行</span></li>
+			<li id="video-onplaying"><span class="disptime"></span>onplaying<span class="des">：再生準備完了</span></li>
+			<li id="video-ontimeupdate"><span class="disptime"></span>ontimeupdate<span class="des">：現在の再生時間が更新</span></li>
+			<li id="video-onpause"><span class="disptime"></span>onpause<span class="des">：再生停止</span></li>
+			<li id="video-onwaiting"><span class="disptime"></span>onwaiting<span class="des">：データの一時不足による停止</span></li>
+			<li id="video-onstalled"><span class="disptime"></span>onstalled<span class="des">：予期しないデータ取得失敗</span></li>
+			<li id="video-onended"><span class="disptime"></span>onended<span class="des">：再生終了</span></li>
+			<li id="video-onerror"><span class="disptime"></span>onerror<span class="des">：読み込み中エラー</span></li>
+			<li id="video-onabort"><span class="disptime"></span>onabort<span class="des">：読み込み中断</span></li>
+			<li id="video-onloadstart"><span class="disptime"></span>onloadstart<span class="des">：読み込み開始</span></li>
+			<li id="video-onprogress"><span class="disptime"></span>onprogress<span class="des">：読み込み中</span></li>
+			<li id="video-onloadeddata"><span class="disptime"></span>onloadeddata<span class="des">：読み込み完了</span></li>
+		</ol>
+	</p>
+	<p>
+		<h3>audio要素（dataurlが音声ならここで再生できます）</h3>
+		<audio controls></audio>
+	</p>
+	<p>
+		<h3>img要素（dataurlが画像ならここに表示されます）</h3>
+		<img alt="画像ファイル未取得"></img>
+	</p>
 </div>
 </body>
 </html>
