@@ -199,6 +199,7 @@ context.fillText("TEST", 50, 50);</code></pre>
 <hr>
 <div id="studying-dataurl">
 	<h2>dataurl + メディアAPIの利用テスト</h2>
+	<h3>dataurlを取得 & 利用するコード</h3>
 	<pre><code id="code-dataurl">
 const file = document.querySelector("#studying-dataurl>input[type=file]").files[0];
 const reader = new FileReader();
@@ -210,6 +211,7 @@ reader.addEventListener("load", () => {
 }, false);
 file && reader.readAsDataURL(file);
 	</code></pre>
+	<h3>以下でファイルを選択すると、dataURLで各メディア要素にファイルが読み込まれます（input type="file"）</h3>
 	<input type="file" onchange="
 		Function(document
 				.querySelector('#code-dataurl')
@@ -231,7 +233,7 @@ file && reader.readAsDataURL(file);
 			   onprogress="mark1('#video-onprogress')"
 			   onloadeddata="mark1('#video-onloadeddata')"
 				></video>
-		<h4>video要素のイベントハンドラ</h4>
+		<h4>video要素のイベントハンドラ（動画を再生すると、イベント発火タイミングを可視化できます）</h4>
 		<ol id="video-list">
 			<li id="video-onplay"><span class="disptime"></span>onplay<span class="des">：再生実行</span></li>
 			<li id="video-onplaying"><span class="disptime"></span>onplaying<span class="des">：再生準備完了</span></li>
