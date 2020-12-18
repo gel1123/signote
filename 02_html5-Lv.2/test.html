@@ -30,7 +30,7 @@ textarea {
 video, audio {
 	width: 400px;
 }
-#video-list>li {
+#media-list>li {
 	background-color: rgb(240, 240, 240);
 }
 </style>
@@ -97,7 +97,6 @@ window.onload = () => {
 
 const timeout_status = {};
 const mark = (target_id) => {
-	console.count(target_id);
 	if (timeout_status[target_id]) {
 		clearTimeout(timeout_status[target_id]);
 	}
@@ -109,14 +108,26 @@ const mark = (target_id) => {
 		target.style.backgroundColor = "white";
 	}, 3000);
 };
-const mark1 = (target_id) => {
+const mark1 = (target_id, self) => {
+	const err_target_list_parent = document.querySelectorAll("#mediaerr *");
+	err_target_list_parent.forEach((e) => {
+		e.style.color = "";
+		e.style.backgroundColor = "";
+	});
+	if (self.error) {
+		const err_target_list = document.querySelectorAll(`.mediaerr${self.error.code}`);
+		err_target_list.forEach((e) => {
+			e.style.color = "red";
+			e.style.backgroundColor = "yellow";
+		});
+	}
 	const target = document.querySelector(target_id);
 	const disptime = target.querySelector(".disptime");
 	var now = new Date();
 	var now_str = ("0"+now.getHours()).slice(-2) + "時" + ("0"+now.getMinutes()).slice(-2) + "分" + ("0"+now.getSeconds()).slice(-2) + "." + ("00"+now.getMilliseconds()).slice(-3) + "秒";
 	disptime.textContent = `${now_str} >> `;
-	const parent = document.querySelector("#video-list");
-	const first = document.querySelector("#video-list>li");
+	const parent = document.querySelector("#media-list");
+	const first = document.querySelector("#media-list>li");
 	parent.insertBefore(target, first);
 	mark(target_id);
 }
@@ -217,46 +228,73 @@ file && reader.readAsDataURL(file);
 				.querySelector('#code-dataurl')
 				.textContent)()">
 	<pre><code id="result-dataurl"></code></pre>
-	<p>
+	<div>
 		<h3>video要素（dataurlが動画ならここで再生できます）</h3>
 		<video controls
-			   onplay="mark1('#video-onplay')"
-			   onplaying="mark1('#video-onplaying')"
-			   ontimeupdate="mark1('#video-ontimeupdate')"
-			   onpause="mark1('#video-onpause')"
-			   onwaiting="mark1('#video-onwaiting')"
-			   onstalled="mark1('#video-onstalled')"
-			   onended="mark1('#video-onended')"
-			   onerror="mark1('#video-onerror')"
-			   onabort="mark1('#video-onabort')"
-			   onloadstart="mark1('#video-onloadstart')"
-			   onprogress="mark1('#video-onprogress')"
-			   onloadeddata="mark1('#video-onloadeddata')"
-				></video>
-		<h4>video要素のイベントハンドラ（動画を再生すると、イベント発火タイミングを可視化できます）</h4>
-		<ol id="video-list">
-			<li id="video-onplay"><span class="disptime"></span>onplay<span class="des">：再生実行</span></li>
-			<li id="video-onplaying"><span class="disptime"></span>onplaying<span class="des">：再生準備完了</span></li>
-			<li id="video-ontimeupdate"><span class="disptime"></span>ontimeupdate<span class="des">：現在の再生時間が更新</span></li>
-			<li id="video-onpause"><span class="disptime"></span>onpause<span class="des">：再生停止</span></li>
-			<li id="video-onwaiting"><span class="disptime"></span>onwaiting<span class="des">：データの一時不足による停止</span></li>
-			<li id="video-onstalled"><span class="disptime"></span>onstalled<span class="des">：予期しないデータ取得失敗</span></li>
-			<li id="video-onended"><span class="disptime"></span>onended<span class="des">：再生終了</span></li>
-			<li id="video-onerror"><span class="disptime"></span>onerror<span class="des">：読み込み中エラー</span></li>
-			<li id="video-onabort"><span class="disptime"></span>onabort<span class="des">：読み込み中断</span></li>
-			<li id="video-onloadstart"><span class="disptime"></span>onloadstart<span class="des">：読み込み開始</span></li>
-			<li id="video-onprogress"><span class="disptime"></span>onprogress<span class="des">：読み込み中</span></li>
-			<li id="video-onloadeddata"><span class="disptime"></span>onloadeddata<span class="des">：読み込み完了</span></li>
-		</ol>
-	</p>
-	<p>
+			   onplay="mark1('#media-onplay', this)"
+			   onplaying="mark1('#media-onplaying', this)"
+			   ontimeupdate="mark1('#media-ontimeupdate', this)"
+			   onpause="mark1('#media-onpause', this)"
+			   onwaiting="mark1('#media-onwaiting', this)"
+			   onstalled="mark1('#media-onstalled', this)"
+			   onended="mark1('#media-onended', this)"
+			   onerror="mark1('#media-onerror', this)"
+			   onabort="mark1('#media-onabort', this)"
+			   onloadstart="mark1('#media-onloadstart', this)"
+			   onprogress="mark1('#media-onprogress', this)"
+			   onloadeddata="mark1('#media-onloadeddata', this)">
+		</video>
+	</div>
+	<div>
 		<h3>audio要素（dataurlが音声ならここで再生できます）</h3>
-		<audio controls></audio>
-	</p>
-	<p>
+		<audio controls
+			   onplay="mark1('#media-onplay', this)"
+			   onplaying="mark1('#media-onplaying', this)"
+			   ontimeupdate="mark1('#media-ontimeupdate', this)"
+			   onpause="mark1('#media-onpause', this)"
+			   onwaiting="mark1('#media-onwaiting', this)"
+			   onstalled="mark1('#media-onstalled', this)"
+			   onended="mark1('#media-onended', this)"
+			   onerror="mark1('#media-onerror', this)"
+			   onabort="mark1('#media-onabort', this)"
+			   onloadstart="mark1('#media-onloadstart', this)"
+			   onprogress="mark1('#media-onprogress', this)"
+			   onloadeddata="mark1('#media-onloadeddata', this)">
+		</audio>
+	</div>
+	<div>
+		<h3>video, audio要素（HTMLMediaElement）に共通のプロパティ等</h3>
+		<h4>イベントハンドラ（メディアを再生すると、イベント発火タイミングを可視化できます）</h4>
+		<ol id="media-list">
+			<li id="media-onplay"><span class="disptime"></span>onplay<span class="des">：再生実行</span></li>
+			<li id="media-onplaying"><span class="disptime"></span>onplaying<span class="des">：再生準備完了</span></li>
+			<li id="media-ontimeupdate"><span class="disptime"></span>ontimeupdate<span class="des">：現在の再生時間が更新</span></li>
+			<li id="media-onpause"><span class="disptime"></span>onpause<span class="des">：再生停止</span></li>
+			<li id="media-onwaiting"><span class="disptime"></span>onwaiting<span class="des">：一時的なデータ不足による停止</span></li>
+			<li id="media-onstalled"><span class="disptime"></span>onstalled<span class="des">：予期しないデータ取得失敗</span></li>
+			<li id="media-onended"><span class="disptime"></span>onended<span class="des">：再生終了</span></li>
+			<li id="media-onerror"><span class="disptime"></span>onerror<span class="des">：読み込み中エラー</span></li>
+			<li id="media-onabort"><span class="disptime"></span>onabort<span class="des">：読み込み中断</span></li>
+			<li id="media-onloadstart"><span class="disptime"></span>onloadstart<span class="des">：読み込み開始</span></li>
+			<li id="media-onprogress"><span class="disptime"></span>onprogress<span class="des">：読み込み中</span></li>
+			<li id="media-onloadeddata"><span class="disptime"></span>onloadeddata<span class="des">：読み込み完了</span></li>
+		</ol>
+		<h4>エラーコード</h4>
+		<dl id="mediaerr">
+			<dt class="mediaerr1"><b>MEDIA_ERR_ABORTED</b></dt>
+			<dd class="mediaerr1">エラーコード "1"。ユーザの要求によるリソースの取得中止</dd>
+			<dt class="mediaerr2"><b>MEDIA_ERR_NETWORK</b></dt>
+			<dd class="mediaerr2">エラーコード "2"。ネットワークエラーによるリソース取得失敗</dd>
+			<dt class="mediaerr3"><b>MEDIA_ERR_DECODE</b></dt>
+			<dd class="mediaerr3">エラーコード "3"。リソース取得後のでコード失敗</dd>
+			<dt class="mediaerr4"><b>MEDIA_ERR_SRC_NOT_SUPPORTED</b></dt>
+			<dd class="mediaerr4">エラーコード "4"。メディアタイプ非対応</dd>
+		</dl>
+	</div>
+	<div>
 		<h3>img要素（dataurlが画像ならここに表示されます）</h3>
 		<img alt="画像ファイル未取得"></img>
-	</p>
+	</div>
 </div>
 </body>
 </html>
