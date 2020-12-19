@@ -91,7 +91,12 @@ window.onload = () => {
 		document.querySelector('#code>textarea'),
 		document.forms.html_beautify_form.html_beautify_input,
 		document.forms.css_beautify_form.css_beautify_input,
-		document.querySelector('#code-canvas1')
+		document.querySelector('#code-canvas1'),
+		document.querySelector('#webstorage-code1'),
+		document.querySelector('#webstorage-code2'),
+		document.querySelector('#webstorage-code3'),
+		document.querySelector('#webstorage-code4'),
+		document.querySelector('#webstorage-code5')
 	].forEach((elm) => elm.dispatchEvent(new Event('input')));
 }
 
@@ -295,6 +300,86 @@ file && reader.readAsDataURL(file);
 		<h3>img要素（dataurlが画像ならここに表示されます）</h3>
 		<img alt="画像ファイル未取得"></img>
 	</div>
+</div>
+<hr>
+<div id="studying-webstorage">
+	<h2>Web Storageについて学習</h2>
+	<h3>localStorageの使い方</h3>
+	<h4>データの追加</h4>
+	<pre><code contenteditable="true"
+		oninput="Function(this.textContent)();"
+		id="webstorage-code1" spellcheck="false">
+localStorage.setItem("hoge", 1);
+localStorage.setItem("fuge", 2);
+localStorage.setItem("last_access", new Date());
+document.querySelector("#storagecode-result1").textContent = JSON.stringify(localStorage, null, "    ");
+	</code></pre>
+	<pre><code>// 実行結果<br><span id="storagecode-result1"></span></code></pre>
+	
+	
+	<h4>データの取得（値とキー）</h4>
+	<pre><code contenteditable="true"
+		oninput="Function(this.textContent)();"
+		id="webstorage-code2" spellcheck="false">
+const result = {
+	"getItem('last_access')": localStorage.getItem("last_access"), // 値の取得（左記のほか、直接プロパティにアクセスすることも可能だが非推奨）
+	"key(0)": localStorage.key(0), // キーの取得 ※順序は保障されない（ユーザエージェント依存）
+	"key(1)": localStorage.key(1), // キーの取得 ※順序は保障されない（ユーザエージェント依存）
+	"key(2)": localStorage.key(2) //  キーの取得 ※順序は保障されない（ユーザエージェント依存）
+}
+document.querySelector("#storagecode-result2").textContent = JSON.stringify(result, null, "    ");
+	</code></pre>
+	<pre><code>// 実行結果<br><span id="storagecode-result2"></span></code></pre>
+	
+	
+	<h4>データの削除</h4>
+	<pre><code contenteditable="true"
+		oninput="Function(this.textContent)();"
+		id="webstorage-code3" spellcheck="false">
+localStorage.removeItem("last_access");
+document.querySelector("#storagecode-result3").textContent = JSON.stringify(localStorage, null, "    ");
+	</code></pre>
+	<pre><code>// 実行結果<br><span id="storagecode-result3"></span></code></pre>
+	
+	
+	<h4>当該オリジンの全データ削除</h4>
+	<pre><code contenteditable="true"
+		oninput="Function(this.textContent)();"
+		id="webstorage-code4" spellcheck="false">
+localStorage.clear();
+document.querySelector("#storagecode-result4").textContent = JSON.stringify(localStorage, null, "    ");
+	</code></pre>
+	<pre><code>// 実行結果<br><span id="storagecode-result4"></span></code></pre>
+	
+	
+	<h4>storageイベントハンドラの利用</h4>
+	<pre><code contenteditable="true"
+		oninput="Function(this.textContent)();"
+		id="webstorage-code5" spellcheck="false">
+// storageイベントハンドラは別タブで同ドメインのストレージ操作があったときに発火する（IE以外）
+window.onstorage = (e) => {
+	const info = {
+		key: e.key, // 変更されたキー
+		oldValue: e.oldValue, // 変更前の値
+		newValue: e.newValue, // 変更後の値
+		url: e.url, // 変更を実行したURL
+		storageArea: e.storageArea // 当該ドメインのストレージの中身（変更後のStorageオブジェクト）
+	};
+	document.querySelector("#storagecode-result5").textContent = JSON.stringify({
+		StorageEvent: info,
+		Storage: {
+			length: info.storageArea.length
+		}
+	}, null, "    ");
+}
+	</code></pre>
+	<pre><code>// 実行結果<br><span id="storagecode-result5"></span></code></pre>
+	
+	
+	<h3>sessionStorageの使い方</h3>
+	<p>用意されているメソッド等は同じだが、localStorageと違いsessionStorageは、データを同じセッション内でしか保存しない。</p>
+	<p>そのため一度ブラウザを閉じればデータは消える。<strong>また新規タブ・ウィンドウでは新しいセッションが作成されるので、別タブ間のstorageイベントハンドラは機能しない。</strong></p>
+	<p><small style="color: red"><b>※上記仕様はセッションCookieとは異なっているので注意</b>（ただしiframe内ではどうなるのかは未検証）</small></p>
 </div>
 </body>
 </html>
