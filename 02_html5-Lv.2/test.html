@@ -96,7 +96,8 @@ window.onload = () => {
 		document.querySelector('#webstorage-code2'),
 		document.querySelector('#webstorage-code3'),
 		document.querySelector('#webstorage-code4'),
-		document.querySelector('#webstorage-code5')
+		document.querySelector('#webstorage-code5'),
+		document.querySelector('#idb-code1')
 	].forEach((elm) => elm.dispatchEvent(new Event('input')));
 }
 
@@ -380,6 +381,34 @@ window.onstorage = (e) => {
 	<p>用意されているメソッド等は同じだが、localStorageと違いsessionStorageは、データを同じセッション内でしか保存しない。</p>
 	<p>そのため一度ブラウザを閉じればデータは消える。<strong>また新規タブ・ウィンドウでは新しいセッションが作成されるので、別タブ間のstorageイベントハンドラは機能しない。</strong></p>
 	<p><small style="color: red"><b>※上記仕様はセッションCookieとは異なっているので注意</b>（ただしiframe内ではどうなるのかは未検証）</small></p>
+</div>
+<hr>
+<div id="studying-idb">
+	<h2>indexedDBの使い方</h2>
+	<pre><code id="idb-code1" contenteditable="true"
+		oninput="Function(this.textContent)();" spellcheck="false">
+// データベースを開く ※応答はIDBOpenDBRequestオブジェクト（IDBRequestオブジェクトを継承している）
+var request = window.indexedDB.open("testdb", 7);
+
+// IDBRequestオブジェクトのイベントハンドラ [ 失敗 / 成功 ]
+console.log(request);
+request.onerror = (e) => console.error("onerror", e);
+request.onsuccess = (e) => {
+	// e.targetはIDBOpenDBRequestオブジェクト（上記の変数requestと同一）
+	console.log("IDB接続OK");
+	const opendb_req = {
+		error: e.target.error, // エラー時DOMErrorオブジェクト
+		result: e.target.result, // データベースへの処理結果
+		sorce: e.target.sorce, // 処理依頼元オブジェクト
+		readyState: e.target.readyState, // 処理の状態
+		transaction: e.target.transaction // トランザクションの状態
+	}
+};
+
+// IDBOpenDBRequestオブジェクトのイベントハンドラ（データベースのバージョンアップ / データベースが使用中）
+request.onupgradeneeded = (e) => console.log("onupgradeneeded", e); // DBの新規作成時と、既存バージョンより新しいバージョンを指定時に発火する
+request.onblocked = (e) => console.error("onupgradeneeded", e); // データベース使用中につき上記を発火できないケースで発火する
+	</code>/<pre>
 </div>
 </body>
 </html>
