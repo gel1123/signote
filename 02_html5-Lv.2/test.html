@@ -387,6 +387,9 @@ window.onstorage = (e) => {
 	<h2>indexedDBの使い方</h2>
 	<pre><code id="idb-code1" contenteditable="true"
 		oninput="Function(this.textContent)();" spellcheck="false">
+// IDB
+let db = undefined;
+
 // 実行結果の画面出力エリア
 const result_area = document.querySelector("#idb-result1");
 
@@ -397,19 +400,20 @@ const customerData = [
 ];
 
 // データベースを開く ※応答はIDBOpenDBRequestオブジェクト（IDBRequestオブジェクトを継承している）
-var request = window.indexedDB.open("testdb", 9);
+var request = window.indexedDB.open("testdb", 10);
 
 // IDBRequestオブジェクトのイベントハンドラ [ 失敗 / 成功 ]
 console.log(request);
 request.onerror = (e) => {
 	console.error("onerror", e);
-	result_area.textContent += "---- error ----\n";
+	result_area.textContent += "\n---- error ----\n";
 	result_area.textContent += JSON.stringify(e, null, "    ");
 }
 request.onsuccess = (e) => {
 	// e.targetはIDBOpenDBRequestオブジェクト（上記の変数requestと同一）
 	console.log("IDB接続OK");
-	result_area.textContent += "---- success ----\n";
+	result_area.textContent += "\n---- success ----\n";
+	
 	const opendb_req = {
 		error: e.target.error, // エラー時DOMErrorオブジェクト
 		result: e.target.result, // データベースへの処理結果
@@ -418,16 +422,58 @@ request.onsuccess = (e) => {
 		transaction: e.target.transaction // トランザクションの状態
 	}
 	result_area.textContent += JSON.stringify(opendb_req, null, "    ");
+	
+	db = e.target.result;
+	
+	// トランザクション成功時
+	var transaction = db.transaction(["customers"], "readwrite");
+	transaction.oncomplete = function(event) {
+		result_area.textContent += "\n---- transaction.oncomplete ----\n";
+	};
+
+
+	var objectStore = transaction.objectStore("customers");
+	for (var i in customerData) {
+		var request = objectStore.add(customerData[i]);
+		request.onsuccess = function(event) {
+	  		event.target.result == customerData[i].ssn;
+	  	};
+	}
+
+	// var reqdel = db.transaction(["customers"], "readwrite")
+	// 				.objectStore("customers")
+	// 				.delete("444-44-4444");
+	// reqdel.onsuccess = function(event) {
+	// 	result_area.textContent += "\n---- データ削除処理完了（444-44-4444） ----\n";
+	// };
+
+	var reqread = objectStore.get("444-44-4444");
+	reqread.onerror = function(event) {
+		console.log(e);
+		result_area.textContent += "\n---- データ読み込み失敗（444-44-4444） ----\n";
+	};
+	reqread.onsuccess = function(event) {
+	  // request.result に対して行う処理!
+	  alert("Name for SSN 444-44-4444 is " + request.result.name);
+	};
 };
 
 // IDBOpenDBRequestオブジェクトのイベントハンドラ（データベースのバージョンアップ / データベースが使用中）
 request.onupgradeneeded = (e) => {
+	
+	// 変数e は【IDBVersionChangeEvent」オブジェクト
+
 	console.log("onupgradeneeded", e); // DBの新規作成時と、既存バージョンより新しいバージョンを指定時に発火する
-	result_area.textContent += "---- upgradeneeded ----\n";
-	const db = e.target.result;
-	var objStore = db.createObjectStore("names", { autoIncrement : true });
-	for (var i in customerData) {
-		objStore.add(customerData[i].name);
+	result_area.textContent += "\n---- upgradeneeded ----\n";
+	db = e.target.result;
+	var objectStore = db.createObjectStore("customers", { keyPath: "ssn" });
+	objectStore.createIndex("name", "name", { unique: false });
+	objectStore.createIndex("email", "email", { unique: true });
+	objectStore.transaction.oncomplete = function(event) {
+		var customerObjectStore = db.transaction("customers", "readwrite").objectStore("customers");
+		for (var i in customerData) {
+			customerObjectStore.add(customerData[i]);
+		}
 	}
 }
 request.onblocked = (e) => console.error("onupgradeneeded", e); // データベース使用中につき上記を発火できないケースで発火する
