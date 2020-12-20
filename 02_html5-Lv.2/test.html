@@ -387,15 +387,22 @@ window.onstorage = (e) => {
 	<h2>indexedDBの使い方</h2>
 	<pre><code id="idb-code1" contenteditable="true"
 		oninput="Function(this.textContent)();" spellcheck="false">
+const result_area = document.querySelector("#idb-result1");
+
 // データベースを開く ※応答はIDBOpenDBRequestオブジェクト（IDBRequestオブジェクトを継承している）
-var request = window.indexedDB.open("testdb", 7);
+var request = window.indexedDB.open("testdb", 9);
 
 // IDBRequestオブジェクトのイベントハンドラ [ 失敗 / 成功 ]
 console.log(request);
-request.onerror = (e) => console.error("onerror", e);
+request.onerror = (e) => {
+	console.error("onerror", e);
+	result_area.textContent += "---- error ----\n";
+	result_area.textContent += JSON.stringify(e, null, "    ");
+}
 request.onsuccess = (e) => {
 	// e.targetはIDBOpenDBRequestオブジェクト（上記の変数requestと同一）
 	console.log("IDB接続OK");
+	result_area.textContent += "---- success ----\n";
 	const opendb_req = {
 		error: e.target.error, // エラー時DOMErrorオブジェクト
 		result: e.target.result, // データベースへの処理結果
@@ -403,12 +410,22 @@ request.onsuccess = (e) => {
 		readyState: e.target.readyState, // 処理の状態
 		transaction: e.target.transaction // トランザクションの状態
 	}
+	result_area.textContent += JSON.stringify(opendb_req, null, "    ");
 };
 
 // IDBOpenDBRequestオブジェクトのイベントハンドラ（データベースのバージョンアップ / データベースが使用中）
-request.onupgradeneeded = (e) => console.log("onupgradeneeded", e); // DBの新規作成時と、既存バージョンより新しいバージョンを指定時に発火する
+request.onupgradeneeded = (e) => {
+	console.log("onupgradeneeded", e); // DBの新規作成時と、既存バージョンより新しいバージョンを指定時に発火する
+	result_area.textContent += "---- upgradeneeded ----\n";
+	const db = e.target.result;
+	var objStore = db.createObjectStore("names", { autoIncrement : true });
+	for (var i in customerData) {
+		objStore.add(customerData[i].name);
+	}
+}
 request.onblocked = (e) => console.error("onupgradeneeded", e); // データベース使用中につき上記を発火できないケースで発火する
-	</code>/<pre>
+	</code><pre>
+	<pre><code id="idb-result1"></code></pre>
 </div>
 </body>
 </html>
