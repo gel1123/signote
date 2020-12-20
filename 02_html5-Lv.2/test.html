@@ -385,9 +385,100 @@ window.onstorage = (e) => {
 <hr>
 <div id="studying-idb">
 	<h2>indexedDBの使い方</h2>
+	<h3>CREATE STORE</h3>
 	<pre><code id="idb-code1" contenteditable="true"
 		oninput="Function(this.textContent)();" spellcheck="false">
+const sel = (s) => document.querySelector(s);
+const disp = sel("#idb-result1");
+const w = (str) => disp.textContent+=str+"\n";
+const customerData = [
+	{ ssn: "444-44-4444", name: "Bill", 
+		age: 35, email: "bill@company.com" },
+	{ ssn: "555-55-5555", name: "Donna", 
+		age: 32, email: "donna@home.org" }
+];
+w("---- start ----");
+
+const r = window.indexedDB.open("DATABASE", 1);
+window.db = undefined;
+r.onerror = (e) => {
+	w("---- error ----");
+	w(e.target.errorCode);
+};
+r.onsuccess = (e) => {
+	w("---- success ----");
+	db = e.target.result;
+};
+r.onupgradeneeded = (e) => {
+	w("---- upgradeneeded ----");
+	db = e.target.result;
+	const store = db.createObjectStore(
+		"customers", { keyPath: "ssn" }
+	);
+	store.createIndex(
+		"name", "name", { unique: false }
+	);
+	store.createIndex(
+		"email", "email", { unique: true }
+	);
+	store.transaction.oncomplete = (e) => {
+		w("---- transaction-complete ----");
+		const cstore = db.transaction(
+			"customers", "readwrite"
+		).objectStore("customers");
+		for (var i in customerData) {
+			cstore.add(customerData[i]);
+		}
+	};
+};
 	</code><pre>
+	<h3>GET RECORD</h3>
+	<pre><code id="idb-code2" contenteditable="true"
+		spellcheck=false>
+const sel = (s) => document.querySelector(s);
+const disp = sel("#idb-result1");
+const w = (str) => disp.textContent+=str+"\n";
+
+const transaction = db.transaction(
+	["customers"], "readonly"
+);
+const cstore = transaction.objectStore("customers");
+const creq = cstore.get("444-44-4444");
+creq.onerror = function(event) {
+  w("---- get-error ----");
+};
+creq.onsuccess = function(event) {
+	w("Name for SSN 444-44-4444 is "
+		+ creq.result.name);
+};
+	</code></pre>
+	<div><button onclick='try {
+		Function(document.querySelector("#idb-code2").textContent)();
+	} catch(e) {document.querySelector("#idb-result1").textContent += e}'>exec</button></div>
+	<h3>GET ALL RECORD</h3>
+	<pre><code id="idb-code3" contenteditable="true"
+		spellcheck=false>
+const sel = (s) => document.querySelector(s);
+const disp = sel("#idb-result1");
+const w = (str) => disp.textContent+=str+"\n";
+
+const transaction = db.transaction(
+	["customers"], "readonly"
+);
+const cstore = transaction.objectStore("customers");
+cstore.openCursor().onsuccess = function(event) {
+	var cursor = event.target.result;
+	if (cursor) {
+		w("Name for SSN " + cursor.key + " is " + cursor.value.name);
+		cursor.continue();
+	} else {
+		w("No more entries!");
+  }
+};
+	</code></pre>
+	<div><button onclick='try {
+		Function(document.querySelector("#idb-code3").textContent)();
+	} catch(e) {document.querySelector("#idb-result1").textContent += e}'>exec</button></div>
 	<pre><code id="idb-result1"></code></pre>
 </div>
 </body>
