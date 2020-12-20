@@ -387,7 +387,14 @@ window.onstorage = (e) => {
 	<h2>indexedDBの使い方</h2>
 	<pre><code id="idb-code1" contenteditable="true"
 		oninput="Function(this.textContent)();" spellcheck="false">
+// 実行結果の画面出力エリア
 const result_area = document.querySelector("#idb-result1");
+
+// IDBに格納したい情報元（顧客情報）
+const customerData = [
+  { ssn: "444-44-4444", name: "Bill", age: 35, email: "bill@company.com" },
+  { ssn: "555-55-5555", name: "Donna", age: 32, email: "donna@home.org" }
+];
 
 // データベースを開く ※応答はIDBOpenDBRequestオブジェクト（IDBRequestオブジェクトを継承している）
 var request = window.indexedDB.open("testdb", 9);
