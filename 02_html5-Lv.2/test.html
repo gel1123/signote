@@ -535,8 +535,15 @@ const resources = ["&lt;p&gt;blob&lt;/p&gt;"];
 const blob = new Blob(resources, { type : "text/html" });
 const url = URL.createObjectURL(blob);
 const iframe = document.querySelector("#studying-blob iframe").src = url;
+
+const w = str => document.querySelector("#blob-result1").textContent += str+"\n";
+w("---- バイトサイズ ----");
+w(blob.size);
+w("---- MIMEタイプ ----");
+w(blob.type);
 	</code></pre>
 	<iframe></iframe>
+	<pre><code id="blob-result1"></pre></code>
 </div>
 </body>
 </html>
