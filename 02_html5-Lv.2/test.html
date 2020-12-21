@@ -97,7 +97,8 @@ window.onload = () => {
 		document.querySelector('#webstorage-code3'),
 		document.querySelector('#webstorage-code4'),
 		document.querySelector('#webstorage-code5'),
-		document.querySelector('#idb-code1')
+		document.querySelector('#idb-code1'),
+		document.querySelector('#blob-code1')
 	].forEach((elm) => elm.dispatchEvent(new Event('input')));
 }
 
@@ -523,6 +524,19 @@ db.transaction("names").objectStore("names").openCursor().onsuccess = e => {
 	
 	<h3>IndexedDBのコード実行結果（ "CREATE STORE" のみ初期表示時に実行済み。他はボタン押下で実行 ）</h3>
 	<pre><code id="idb-result1"></code></pre>
+</div>
+<hr>
+<div id="studying-blob">
+	<h2>Blobオブジェクトの使い方</h2>
+	<pre><code id="blob-code1" contenteditable="true"
+		oninput="Function(this.textContent)();"
+		spellcheck="false">
+const resources = ["&lt;p&gt;blob&lt;/p&gt;"];
+const blob = new Blob(resources, { type : "text/html" });
+const url = URL.createObjectURL(blob);
+const iframe = document.querySelector("#studying-blob iframe").src = url;
+	</code></pre>
+	<iframe></iframe>
 </div>
 </body>
 </html>
