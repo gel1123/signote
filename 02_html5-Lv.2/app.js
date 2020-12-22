@@ -14,8 +14,16 @@ function doRequest(req, res) {
             console.log(body);
 	});
         res.writeHead(200, {'Content-Type': 'text/plain'});
-        res.write("received xhr.");
+        res.write('{"hoge": 100 }');
         res.end();
+    } else if (req.url==="/sse") {
+        console.log("open sse");
+        res.writeHead(200, {
+            'Content-Type': 'text/event-stream',
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive'
+        });
+        setInterval(() => res.write("data:["+ new Date() +"] Server-Sent Events\n\n"), 5000);
     } else {
         fs.readFile('./test.html', 'utf-8' , (err, data) => {
             res.writeHead(200, {'Content-Type': 'text/html'});

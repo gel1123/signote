@@ -101,7 +101,8 @@ window.onload = () => {
 		document.querySelector('#blob-code1'),
 		document.querySelector('#ws-code1'),
 		document.querySelector('#xhr-code1'),
-		document.querySelector('#sp-code1')
+		document.querySelector('#sp-code1'),
+		document.querySelector('#sse-code1')
 
 	].forEach((elm) => elm.dispatchEvent(new Event('input')));
 }
@@ -595,6 +596,8 @@ w(`["${client.readyState}"] ${STATE[client.readyState]}`);
 
 client.open("POST", "http://localhost:8080/xhr");
 client.setRequestHeader("Content-Type", "text/plain");
+w("default timeout is " + client.timeout);
+client.timeout = 5000; // millisecond
 
 w("\n---- [before send] ----");
 w(`["${client.readyState}"] ${STATE[client.readyState]}`);
@@ -603,6 +606,11 @@ client.send("Hi!");
 client.onreadystatechange = e => {
 	w("\n---- readystatechange (readyStateが変更) ----");
 	w(`["${client.readyState}"] ${STATE[client.readyState]}`);
+
+	if (client.readyState == "2") {
+
+		client.responseType = "json";
+	}
 };
 client.onloadstart = e => {
 	w("\n---- loadstart (リソースのロード開始) ----");
@@ -630,16 +638,30 @@ client.onload = e => {
 		w("-- catch exception --");
 		w(e);
 	}
+
+	try {
+		const text = client.responseText;
+	} catch(e) {
+		w("-- catch exception --");
+		w(e);
+	}
+	try {
+		const xml = client.responseXML;
+	} catch(e) {
+		w("-- catch exception --");
+		w(e);
+	}
+
 	const info = {
 		"getResponseHeader()": client.getResponseHeader("Content-Type"),
 		"getAllResponseHeaders()": client.getAllResponseHeaders(),
 		status: client.status,
 		statusText: client.statusText,
 		responseType: client.responseType,
-		response: client.response,
-		responseText: client.responseText,
-		responseXML:client.responseXML
+		response: client.response
 	};
+
+	w("\n-- HTTP status is "+client.status+" --");
 	w(JSON.stringify(info, null, "    "));
 };
 client.ontimeout = e => {
@@ -683,6 +705,36 @@ window.addEventListener("resize", e => {
 	</code></pre>
 	<pre><code id="sp-result1"></code></pre>
 </div>
+<div id="studying-sse">
+	<h2>Server-Sent Events</h2>
+	<pre><code id="sse-code1" contenteditable="true"
+				 oninput="try { Function(this.textContent)();} catch(e) {document.querySelector('#sse-result1').textContent += e+'\n'}" spellcheck="false">
+const w = str => document.querySelector("#sse-result1").innerHTML += str+"\n";
+const sse = new EventSource("/sse");
+const STATE = {
+	0: "[0] CONNECTING",
+	1: "[1] OPEN",
+	2: "[2] CLOSE"
+};
+w(STATE[sse.readyState]);
+sse.onopen = e => {
+	w("---- open ----");
+	console.log("server sent event", e);
+	w(STATE[sse.readyState]);
+};
+sse.onmessage = e => {
+	w("---- message ----");
+	console.log("server sent event", e);
+	w(STATE[sse.readyState]);
+	w(e.data);
+};
+sse.onerror = e => {
+	w("---- error ----");
+	console.log("server sent event", e);
+	w(STATE[sse.readyState]);
+};
+	</code></pre>
+	<pre><code id="sse-result1"></code></pre>
 </body>
 </html>
 
