@@ -98,7 +98,10 @@ window.onload = () => {
 		document.querySelector('#webstorage-code4'),
 		document.querySelector('#webstorage-code5'),
 		document.querySelector('#idb-code1'),
-		document.querySelector('#blob-code1')
+		document.querySelector('#blob-code1'),
+		document.querySelector('#ws-code1'),
+		document.querySelector('#xhr-code1')
+
 	].forEach((elm) => elm.dispatchEvent(new Event('input')));
 }
 
@@ -537,6 +540,8 @@ const url = URL.createObjectURL(blob);
 const iframe = document.querySelector("#studying-blob iframe").src = url;
 
 const w = str => document.querySelector("#blob-result1").textContent += str+"\n";
+w("---- Blob URL ----");
+w(url);
 w("---- バイトサイズ ----");
 w(blob.size);
 w("---- MIMEタイプ ----");
@@ -544,6 +549,43 @@ w(blob.type);
 	</code></pre>
 	<iframe></iframe>
 	<pre><code id="blob-result1"></pre></code>
+</div>
+<div>
+	<h2>Web Socket</h2>
+	<pre><code id="ws-code1" contenteditable="true"
+				 oninput="try { Function(this.textContent)();} catch(e) {document.querySelector('#ws-result1').textContent += e+'\n'}" spellcheck="false">
+const w = str => document.querySelector("#ws-result1").textContent += str+"\n";
+<strong>// The scheme is ws or wss</strong>
+var ws = new WebSocket("<strong>ws://</strong>localhost:8000");
+ws.onopen = e => {
+	w("---- open ----");
+	ws.send("mugi");
+};
+ws.onclose = e => {
+	w("---- close ----");
+};
+ws.onmessage = e => {
+	w("---- message ----");
+	w("MESSAGE FROM SERVER -> [ "+e.data+" ]");
+	ws.close();
+};
+ws.onerror = e => {
+	w("---- error ----");
+};
+	</code></pre>
+	<pre><code id="ws-result1"></code></pre>
+</div>
+<div>
+	<h2>XMLHttpRequest</h2>
+	<pre><code id="xhr-code1" contenteditable="true"
+				 oninput="try { Function(this.textContent)();} catch(e) {document.querySelector('#xhr-result1').textContent += e+'\n'}" spellcheck="false">
+const w = str => document.querySelector("#ws-result1").textContent += str+"\n";
+var client = new XMLHttpRequest();
+client.open("POST", "http://localhost:8080/xhr");
+client.setRequestHeader("Content-Type", "text/plain");
+client.send("Hi!");
+	</code></pre>
+	<pre><code id="xhr-result1"></code></pre>
 </div>
 </body>
 </html>
