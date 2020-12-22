@@ -591,18 +591,18 @@ const STATE = {
 };
 
 w("---- [before open] ----");
-w(`${STATE[client.readyState]} ["${client.readyState}"]`);
+w(`["${client.readyState}"] ${STATE[client.readyState]}`);
 
 client.open("POST", "http://localhost:8080/xhr");
 client.setRequestHeader("Content-Type", "text/plain");
 
 w("\n---- [before send] ----");
-w(`${STATE[client.readyState]} ["${client.readyState}"]`);
+w(`["${client.readyState}"] ${STATE[client.readyState]}`);
 
 client.send("Hi!");
 client.onreadystatechange = e => {
 	w("\n---- readystatechange (readyStateが変更) ----");
-	w(`${STATE[client.readyState]} ["${client.readyState}"]`);
+	w(`["${client.readyState}"] ${STATE[client.readyState]}`);
 };
 client.onloadstart = e => {
 	w("\n---- loadstart (リソースのロード開始) ----");
@@ -623,6 +623,24 @@ client.onerror = e => {
 client.onload = e => {
 	w("\n---- load (リソース読み込み完了) ----");
 	console.log(e);
+
+	try {
+		client.overrideMimeType("text/html");
+	} catch (e) {
+		w("-- catch exception --");
+		w(e);
+	}
+	const info = {
+		"getResponseHeader()": client.getResponseHeader("Content-Type"),
+		"getAllResponseHeaders()": client.getAllResponseHeaders(),
+		status: client.status,
+		statusText: client.statusText,
+		responseType: client.responseType,
+		response: client.response,
+		responseText: client.responseText,
+		responseXML:client.responseXML
+	};
+	w(JSON.stringify(info, null, "    "));
 };
 client.ontimeout = e => {
 	w("\n---- timeout (通信タイムアウト) ----");
@@ -641,16 +659,25 @@ client.onloadend = e => {
 				 oninput="try { Function(this.textContent)();} catch(e) {document.querySelector('#sp-result1').textContent += e+'\n'}" spellcheck="false">
 const w = str => document.querySelector("#sp-result1").innerHTML += str+"\n";
 window.addEventListener("orientationchange", e => {
-	w("---- 画面方向の変更が検出されました ----");
+	w("---- orientationchange :: 画面方向の変更が検出されました ----");
 	
 	// イベント検出直後には横幅の取得が正確ではないので
 	// 横幅の取得は処理を遅延させて行うのがベスト
 	// 参考にしたURL：http://www.cattlemute.com/2017/12/08/39/
 	setTimeout(() => {
-		w("-- ウィンドウの横幅（遅延取得） --");
+		w("-- orientationchange :: ウィンドウの横幅（遅延取得） --");
 		w(window.innerWidth);
 	}, 100);
-	w("-- ウィンドウの横幅（イベント発生直後） --");
+	w("-- orientationchange :: ウィンドウの横幅（イベント発生直後） --");
+	w(window.innerWidth);
+});
+window.addEventListener("resize", e => {
+	w("---- resize :: 画面方向の変更が検出されました ----");
+	setTimeout(() => {
+		w("-- resize :: ウィンドウの横幅（遅延取得） --");
+		w(window.innerWidth);
+	}, 100);
+	w("-- resize :: ウィンドウの横幅（イベント発生直後） --");
 	w(window.innerWidth);
 });
 	</code></pre>
