@@ -642,7 +642,16 @@ client.onloadend = e => {
 const w = str => document.querySelector("#sp-result1").innerHTML += str+"\n";
 window.addEventListener("orientationchange", e => {
 	w("---- 画面方向の変更が検出されました ----");
-	console.log(e);
+	
+	// イベント検出直後には横幅の取得が正確ではないので
+	// 横幅の取得は処理を遅延させて行うのがベスト
+	// 参考にしたURL：http://www.cattlemute.com/2017/12/08/39/
+	setTimeout(() => {
+		w("-- ウィンドウの横幅（遅延取得） --");
+		w(window.innnerWidth);
+	}, 100);
+	w("-- ウィンドウの横幅（イベント発生直後） --");
+	w(window.innnerWidth);
 });
 	</code></pre>
 	<pre><code id="sp-result1"></code></pre>
