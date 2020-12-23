@@ -102,7 +102,8 @@ window.onload = () => {
 		document.querySelector('#ws-code1'),
 		document.querySelector('#xhr-code1'),
 		document.querySelector('#sp-code1'),
-		document.querySelector('#sse-code1')
+		document.querySelector('#sse-code1'),
+		document.querySelector('#other-code1')
 
 	].forEach((elm) => elm.dispatchEvent(new Event('input')));
 }
@@ -716,6 +717,7 @@ const STATE = {
 	1: "[1] OPEN",
 	2: "[2] CLOSE"
 };
+let count = 0;
 w(STATE[sse.readyState]);
 sse.onopen = e => {
 	w("---- open ----");
@@ -727,6 +729,8 @@ sse.onmessage = e => {
 	console.log("server sent event", e);
 	w(STATE[sse.readyState]);
 	w(e.data);
+	count++;
+	count > 4 && sse.close();
 };
 sse.onerror = e => {
 	w("---- error ----");
@@ -735,6 +739,41 @@ sse.onerror = e => {
 };
 	</code></pre>
 	<pre><code id="sse-result1"></code></pre>
+</div>
+<div id="studying-other">
+	<h2>other</h2>
+	<pre><code id="other-code1" contenteditable="true"
+				 oninput="try { Function(this.textContent)();} catch(e) {document.querySelector('#other-result1').textContent += e+'\n'}" spellcheck="false">
+const w = str => document.querySelector("#other-result1").innerHTML += str+"\n";
+
+const successCB = p => {
+	w("----geolocation API----");
+	w("-- success--");
+	w(JSON.stringify(p.coords, null, '    '));
+
+};
+const errorCB= e => {
+	w("----geolocation API----");
+	w("-- error --");
+	w(e.code);
+	w(e.message);
+
+};
+navigator.geolocation.getCurrentPosition(successCB, errorCB);
+
+w("---- High Resolution Time API  ----");
+w(performance.now());
+
+setTimeout(() => {
+	w("---- performance.timing ----");
+	const ent = Object.entries(JSON.parse(JSON.stringify(performance.timing)));
+	ent.sort((p1,p2) => p2[1]-p1[1]);
+	w(JSON.stringify(Object.fromEntries(ent), null, "    "));
+}, 500);
+
+	</code></pre>
+	<pre><code id="other-result1"></code></pre>
+</div>
 </body>
 </html>
 
