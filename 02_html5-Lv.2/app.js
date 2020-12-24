@@ -24,6 +24,24 @@ function doRequest(req, res) {
             'Connection': 'keep-alive'
         });
         setInterval(() => res.write("data:["+ new Date() +"] Server-Sent Events\n\n"), 5000);
+    } else if (req.url==="/91") {
+        fs.readFile('./91.html', 'utf-8' , (err, data) => {
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.write(data);
+            res.end();
+        });
+    } else if (req.url==="/92") {
+        fs.readFile('./92.html', 'utf-8' , (err, data) => {
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.write(data);
+            res.end();
+        });
+    } else if (req.url==="/93") {
+        fs.readFile('./93.html', 'utf-8' , (err, data) => {
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.write(data);
+            res.end();
+        });
     } else {
         fs.readFile('./test.html', 'utf-8' , (err, data) => {
             res.writeHead(200, {'Content-Type': 'text/html'});
