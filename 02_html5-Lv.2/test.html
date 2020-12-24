@@ -749,7 +749,18 @@ const w = str => document.querySelector("#other-result1").innerHTML += str+"\n";
 const successCB = p => {
 	w("----geolocation API----");
 	w("-- success--");
-	w(JSON.stringify(p.coords, null, '    '));
+	w(p.timestamp);
+	const c = p.coords;
+	const info = {
+		latitude: c.latitude,
+		longitude: c.longitude,
+		altitude: c.altitude,
+		accuracy: c.accuracy,
+		altitudeAccuracy: c.altitudeAccuracy,
+		heading: c.heading,
+		speed: c.speed
+	};
+	w(JSON.stringify(info, null, '    '))
 
 };
 const errorCB= e => {
