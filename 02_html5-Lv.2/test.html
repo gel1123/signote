@@ -20,6 +20,9 @@ textarea {
 	height: 150px;
 	width: 100%;
 }
+canvas {
+	border: 1px solid;
+}
 .err {
 	color: red;
 }
@@ -217,8 +220,32 @@ context.setTransform(
 	0,	 	// 5. x軸の移動
 	0		// 6. y軸の移動
 );
-context.fillText("TEST", 50, 50);</code></pre>
-	<canvas id="canvas1"></canvas>
+context.fillText("TEST", 50, 50);
+
+const c2 = document.querySelector("#canvas2");
+const ctx2 = c2.getContext("2d");
+
+ctx2.clearRect(0, 0, c2.width, c2.height); // 描画領域全体をクリア
+ctx2.beginPath(); // パスの開始（サブパスのリセット）
+ctx2.strokeStyle = "blue";
+ctx2.moveTo(40, 20);
+ctx2.lineTo(40, 100);
+ctx2.lineTo(100, 100);
+ctx2.closePath(); // 始点へと繋がる直線のパスを作成して、パスを終了する
+ctx2.stroke();
+ctx2.save();
+console.log("---- canvas2's context is saved ----")
+setInterval(() => {
+	ctx2.clearRect(0, 0, c2.width, c2.height);
+	setTimeout(() => {
+		ctx2.restore();
+		ctx2.stroke();
+	}, 700)
+}, 1000);
+
+</code></pre>
+	<div><canvas id="canvas1"></canvas></div>
+	<div><canvas id="canvas2"></canvas></div>
 </div>
 <hr>
 <div id="studying-dataurl">
@@ -782,8 +809,34 @@ setTimeout(() => {
 	w(JSON.stringify(Object.fromEntries(ent), null, "    "));
 }, 500);
 
+
+// ---- study requestAnimationFrame ----
+// -- 画面最下部に水色の長方形がスライドしていくアニメーションを作成 --
+// ※下記では利用していないが、アニメーションの削除はcancelAnimationFrame(id)を使う
+let start = 0;
+const target = document.querySelector("#bx");
+const step = function(t) {
+	console.log("step", t);
+	const progress = t - start;
+	target.style.left = `${progress/10}px`;
+	const iscontinue = ((progress/10)+50) < parseInt(window.innerWidth); //=> is continue animation
+	if (iscontinue) {
+		window.requestAnimationFrame(step);
+	} else {
+		setTimeout(() => {
+			target.style.left = "0";
+			setTimeout(() => {
+				start = t;
+				window.requestAnimationFrame(step);
+			}, 1000);
+		}, 1000)
+	}
+
+};
+window.requestAnimationFrame(step);
 	</code></pre>
 	<pre><code id="other-result1"></code></pre>
+	<div style="position:fixed;bottom:0;left:0;height:5px;width:50px;background:rgba(100,200,255,0.7);" id="bx"></div>
 </div>
 </body>
 </html>
