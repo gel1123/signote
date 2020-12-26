@@ -809,6 +809,19 @@ setTimeout(() => {
 	w(JSON.stringify(Object.fromEntries(ent), null, "    "));
 }, 500);
 
+window.addEventListener("deviceorientation", e => {
+	w("---- deviceorientation ----")
+	//const info = {
+	//	"z軸（alpha. 0~360）": e.alpha,
+	//	"x軸（beta. -180~180）": e.beta,
+	//	"y軸（gamma. -90~90）": e.gamma
+	//}
+	//w(JSON.stringify(info, null, "    "));
+	document.querySelector("#alpha").textContent = e.alpha;
+	document.querySelector("#beta").textContent = e.beta;
+	document.querySelector("#gamma").textContent = e.gamma;
+});
+
 
 // ---- study requestAnimationFrame ----
 // -- 画面最下部に水色の長方形がスライドしていくアニメーションを作成 --
@@ -816,7 +829,6 @@ setTimeout(() => {
 let start = 0;
 const target = document.querySelector("#bx");
 const step = t => {
-	console.log("step", t);
 	const progress = t - start;
 	target.style.left = `${progress/10}px`;
 	const iscontinue = ((progress/10)+50) < parseInt(window.innerWidth); //=> is continue animation
@@ -839,6 +851,13 @@ const reset_step = t => {
 window.requestAnimationFrame(step);
 	</code></pre>
 	<pre><code id="other-result1"></code></pre>
+	<div id="do">
+		<ul>
+			<li>z軸（反時計回りに0~360）<span id="alpha"></span></li>
+			<li>x軸（時計回りに-180~180）<span id="beta"></span></li>
+			<li>y軸（時計回りに-90~90）<span id="gamma"></span></li>
+		</ul>
+	</div>
 	<div style="position:fixed;bottom:0;left:0;height:10px;width:50px;background:rgba(100,200,255,0.7);" id="bx"></div>
 </div>
 </body>
