@@ -815,7 +815,7 @@ setTimeout(() => {
 // ※下記では利用していないが、アニメーションの削除はcancelAnimationFrame(id)を使う
 let start = 0;
 const target = document.querySelector("#bx");
-const step = function(t) {
+const step = t => {
 	console.log("step", t);
 	const progress = t - start;
 	target.style.left = `${progress/10}px`;
@@ -826,12 +826,15 @@ const step = function(t) {
 		setTimeout(() => {
 			target.style.left = "0";
 			setTimeout(() => {
-				start = t;
-				window.requestAnimationFrame(step);
+				window.requestAnimationFrame(reset_step);
 			}, 1000);
 		}, 1000)
 	}
 
+};
+const reset_step = t => {
+	start = t;
+	step(t);
 };
 window.requestAnimationFrame(step);
 	</code></pre>
